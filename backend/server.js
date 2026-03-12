@@ -3,6 +3,7 @@ const cors = require("cors");
 require("dotenv").config();
 
 const connectDB = require("./config/db");
+const authRoutes = require("./routes/authRoutes");
 
 const app = express();
 
@@ -11,9 +12,23 @@ connectDB();
 app.use(cors());
 app.use(express.json());
 
+app.use("/api/auth", authRoutes);
+
 app.get("/", (req, res) => {
   res.send("Social Media API Running");
 });
+
+const authMiddleware = require("./middleware/authMiddleware");
+
+app.get("/api/test-protected", authMiddleware, (req, res) => {
+
+  res.json({
+    message: "Protected route accessed",
+    userId: req.user
+  });
+
+});
+
 
 
 const PORT = process.env.PORT || 5000;
