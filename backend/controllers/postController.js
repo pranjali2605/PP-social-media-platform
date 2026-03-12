@@ -113,3 +113,27 @@ exports.deletePost = async (req, res) => {
   }
 
 };
+
+exports.getFeed = async (req, res) => {
+
+  try {
+
+    const User = require("../models/User");
+
+    const currentUser = await User.findById(req.user);
+
+    const posts = await Post.find({
+      user: { $in: currentUser.following }
+    })
+      .populate("user", "username profilePic")
+      .sort({ createdAt: -1 });
+
+    res.json(posts);
+
+  } catch (error) {
+
+    res.status(500).json({ message: error.message });
+
+  }
+
+};
