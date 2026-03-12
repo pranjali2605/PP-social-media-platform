@@ -2,7 +2,11 @@ const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 
+const connectDB = require("./config/db");
+
 const app = express();
+
+connectDB();
 
 app.use(cors());
 app.use(express.json());
@@ -10,6 +14,7 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.send("Social Media API Running");
 });
+
 
 const PORT = process.env.PORT || 5000;
 
